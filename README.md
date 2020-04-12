@@ -18,10 +18,10 @@ The script requires the use of:
 DIRECTORY="/var/www/frp.policygeek.ca/public_html/historical/$(date "+%Y-%m-%d")"
 
 #### Change base directory
-* You can change the `/var/www/frp.policygeek.ca/public_html/historical/` base directory to the base location you wish to store the snapshots.  Make sure the directory you choose exists.  If not, create it.
+You can change the `/var/www/frp.policygeek.ca/public_html/historical/` base directory to the base location you wish to store the snapshots.  Make sure the directory you choose exists.  If not, create it.
 
 #### Change dynamic directory for storing snapshots
-* You can change `$(date "+%Y-%m-%d")` to reflect the sub-directory to store the actual FRP snapshots.  The default will create a directory of the format YYYY-MM-DD in your base directory.
+You can change `$(date "+%Y-%m-%d")` to reflect the sub-directory to store the actual FRP snapshots.  The default will create a directory of the format YYYY-MM-DD in your base directory.
 
 ## Usage
 To capture a snapshot of the curren Canada Revenue Agency Forward Regulatory Plans, run:
