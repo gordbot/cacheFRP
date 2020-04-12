@@ -14,8 +14,7 @@ The script requires the use of:
 ## Installing
 
 ### Edit cacheFRP.sh to modify the defaults:
-```bash
-DIRECTORY="/var/www/frp.policygeek.ca/public_html/historical/$(date "+%Y-%m-%d")"
+`DIRECTORY="/var/www/frp.policygeek.ca/public_html/historical/$(date "+%Y-%m-%d")"`
 
 #### Change base directory
 You can change the `/var/www/frp.policygeek.ca/public_html/historical/` base directory to the base location you wish to store the snapshots.  Make sure the directory you choose exists.  If not, create it.
