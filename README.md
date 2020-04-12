@@ -25,7 +25,7 @@ You can change `$(date "+%Y-%m-%d")` to reflect the sub-directory to store the a
 
 ## Usage
 To capture a snapshot of the curren Canada Revenue Agency Forward Regulatory Plans, run:
-`./cacheFRP
+`./cacheFRP`
 
 ## Contributing
 This is a quick script I put together to help me capture changes in the CRA Forward Regulatory Plans.  The whole of the Government of Canada is required to publish these plans at least annually.  I would be interested in abstracting the process and applying it to the government-wide plans, with the hopes of making a historical record of all Foreward Regulatory Plans.
