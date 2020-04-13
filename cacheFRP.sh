@@ -8,30 +8,26 @@
 #OUTPUTDIR=$1
 #FRPURL=$2
 #DEPT=$3
+
+# For testing, parameters are given in code
 OUTPUTDIR="/var/www/frp.policygeek.ca/public_html"
 FRPURL="https://www.canada.ca/en/revenue-agency/programs/about-canada-revenue-agency-cra/acts-regulations/forward-regulatory-plan/current-initiatives/regulatory-initiatives.html"
 DEPT="CRA"
 
+# Prepare other variables from parameters
 DOMAIN=$(echo $FRPURL|awk -F[/:] '{print $4}')
-echo "${DOMAIN}"
 BASEURL="/www.canada.ca/en/revenue-agency/programs/about-canada-revenue-agency-cra/acts-regulations/forward-regulatory-plan/current-initiatives/"
 FILENAME="${FRPURL##*/}"
-#FILENAME="regulatory-initiatives.html"
-
-#For example, for the Canada Revenue Agency, you would execute:
-#cacheFRP.sh /var/www/frp.policygeek.ca/public_html https://www.canada.ca/en/revenue-agency/programs/about-canada-revenue-agency-cra/acts-regulations/forward-regulatory-plan/current-initiatives/regulatory-initiatives.html CRA
 
 # Append the date to the directory using the format 
 # YYYY-MM-DD
 DIRECTORY="${OUTPUTDIR}/${DEPT}/$(date "+%Y-%m-%d")"
-echo "Directory to create: ${DIRECTORY}"
 
 
 # If the directory doesnt exist
 if [ ! -d "$DIRECTORY" ]; then
     # Make the local directory for the snapshot AND
     # Grab a copy of the directory recursively, staying within canada.ca domain, not following parent links
-    
 	mkdir $DIRECTORY && wget --recursive --no-clobber --page-requisites --html-extension --convert-links --restrict-file-names=windows --domains canada.ca --no-parent -P $DIRECTORY $FRPURL 
 
     # Move the files from the deep file file structure up to the main directory
@@ -48,5 +44,5 @@ if [ ! -d "$DIRECTORY" ]; then
 
     # Replace the stylesheet path with the local stylesheet store
     # TODO: Abstract or parametrize how we handle the stylesheet
-    sed -i "s/..\/..\/..\/..\/..\/..\/..\/etc\/designs\/canada\/wet-boew\/css\/theme.min.css/\/styles\/theme.min.css/" "${DIRECTORY}/index.html"
+    sed -i "s|../../../../../../../etc/designs/canada/wet-boew/css/theme.min.css|../styles/theme.min.css|" "${DIRECTORY}/index.html"
 fi
