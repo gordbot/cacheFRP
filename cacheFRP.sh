@@ -11,7 +11,7 @@
 #DOMAIN=$4
 #BASEURL=$5
 #FILENAME="${FRPURL##*/}"
-INPUTDIR="/var/www/frp.policygeek.ca/public_html"
+OUTPUTDIR="/var/www/frp.policygeek.ca/public_html"
 FRPURL="https://www.canada.ca/en/revenue-agency/programs/about-canada-revenue-agency-cra/acts-regulations/forward-regulatory-plan/current-initiatives/regulatory-initiatives.html"
 DEPT="CRA"
 DOMAIN="www.canada.ca"
@@ -23,7 +23,8 @@ FILENAME="regulatory-initiatives.html"
 
 # Append the date to the directory using the format 
 # YYYY-MM-DD
-DIRECTORY="${INPUTDIR}/${DEPT}/$(date "+%Y-%m-%d")"
+DIRECTORY="${OUTPUTDIR}/${DEPT}/$(date "+%Y-%m-%d")"
+echo "Directory to create: ${DIRECTORY}"
 
 
 # If the directory doesnt exist
