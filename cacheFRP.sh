@@ -5,18 +5,18 @@
 # Gordon D. Bonnar -- 2020-04-07
 
 # Set internal variables to arguments passed to script
-#INPUTDIR=$1
+#OUTPUTDIR=$1
 #FRPURL=$2
 #DEPT=$3
-#DOMAIN=$4
-#BASEURL=$5
-#FILENAME="${FRPURL##*/}"
 OUTPUTDIR="/var/www/frp.policygeek.ca/public_html"
 FRPURL="https://www.canada.ca/en/revenue-agency/programs/about-canada-revenue-agency-cra/acts-regulations/forward-regulatory-plan/current-initiatives/regulatory-initiatives.html"
 DEPT="CRA"
-DOMAIN="www.canada.ca"
+
+DOMAIN=$(echo $FRPURL|awk -F[/:] '{print $4}')
+echo "${DOMAIN}"
 BASEURL="/www.canada.ca/en/revenue-agency/programs/about-canada-revenue-agency-cra/acts-regulations/forward-regulatory-plan/current-initiatives/"
-FILENAME="regulatory-initiatives.html"
+FILENAME="${FRPURL##*/}"
+#FILENAME="regulatory-initiatives.html"
 
 #For example, for the Canada Revenue Agency, you would execute:
 #cacheFRP.sh /var/www/frp.policygeek.ca/public_html https://www.canada.ca/en/revenue-agency/programs/about-canada-revenue-agency-cra/acts-regulations/forward-regulatory-plan/current-initiatives/regulatory-initiatives.html CRA
