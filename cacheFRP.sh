@@ -10,18 +10,43 @@
 #DEPT=$3
 
 # For testing, parameters are given in code
+########
+#  CBSA 
+#######
 OUTPUTDIR="/var/www/frp.policygeek.ca/public_html"
-FRPURL="https://www.canada.ca/en/revenue-agency/programs/about-canada-revenue-agency-cra/acts-regulations/forward-regulatory-plan/current-initiatives/regulatory-initiatives.html"
-DEPT="CRA"
+FRPURL="https://www.cbsa-asfc.gc.ca/agency-agence/actreg-loireg/frp-ppr-eng.html"
+DEPT="CBSA"
 
 # Prepare other variables from parameters
 DOMAIN=$(echo $FRPURL|awk -F[/:] '{print $4}')
-BASEURL="/www.canada.ca/en/revenue-agency/programs/about-canada-revenue-agency-cra/acts-regulations/forward-regulatory-plan/current-initiatives/"
+BASEURL="/www.cbsa-asfc.gc.ca/agency-agence/actreg-loireg/"
 FILENAME="${FRPURL##*/}"
+
+echo $OUTPUTDIR
+echo $FRPURL
+echo $DEPT
+echo $DOMAIN
+echo $BASEURL
+echo $FILENAME
+# End CRA example
+###################################
+###################################
+#  CRA 
+#OUTPUTDIR="/var/www/frp.policygeek.ca/public_html"
+#FRPURL="https://www.canada.ca/en/revenue-agency/programs/about-canada-revenue-agency-cra/acts-regulations/forward-regulatory-plan/current-initiatives/regulatory-initiatives.html"
+#DEPT="CRA"
+#
+## Prepare other variables from parameters
+#DOMAIN=$(echo $FRPURL|awk -F[/:] '{print $4}')
+#BASEURL="/www.canada.ca/en/revenue-agency/programs/about-canada-revenue-agency-cra/acts-regulations/forward-regulatory-plan/current-initiatives/"
+#FILENAME="${FRPURL##*/}"
+# End CRA
+###################################
 
 # Append the date to the directory using the format 
 # YYYY-MM-DD
 DIRECTORY="${OUTPUTDIR}/${DEPT}/$(date "+%Y-%m-%d")"
+echo $DIRECTORY
 
 
 # If the directory doesnt exist
@@ -31,7 +56,9 @@ if [ ! -d "$DIRECTORY" ]; then
 	mkdir $DIRECTORY && wget --recursive --no-clobber --page-requisites --html-extension --convert-links --restrict-file-names=windows --domains canada.ca --no-parent -P $DIRECTORY $FRPURL 
 
     # Move the files from the deep file file structure up to the main directory
+    echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 	mv "${DIRECTORY}${BASEURL}"/* "${DIRECTORY}/"
+    echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
     # Remove the www.canada.ca directory
 	rm -r "${DIRECTORY}/${DOMAIN}"
