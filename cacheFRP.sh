@@ -7,13 +7,21 @@
 # Set internal variables to arguments passed to script
 # Load parameters from source file
 # Config file should define:
-# OUTPUTDIR - Where to save fownloaded files
 # FRPURL - The URL to the FRP page on the internet
 # DEPT - The offical short form of the department or agency name
 # BASEURL - The URL from the end of the protocol to just before the filenam
 # TODO: Calculate BASEURL dynamicaly
 
-source FIN.conf
+# Config file passed as argument
+if [ "$#" -ne 1 ]
+then
+    echo "Usage: cacheFRP.sh file.conf"
+    exit 1
+fi
+source $1
+
+# OUTPUTDIR - Where to save fownloaded files
+OUTPUTDIR="/var/www/frp.policygeek.ca/public_html"
 
 # Prepare other variables from parameters
 DOMAIN=$(echo $FRPURL|awk -F[/:] '{print $4}')
@@ -22,14 +30,13 @@ FILENAME="${FRPURL##*/}"
 # Append the date to the directory using the format 
 # YYYY-MM-DD
 DIRECTORY="${OUTPUTDIR}/${DEPT}/$(date "+%Y-%m-%d")"
-echo $DIRECTORY
 
 
 # If the directory doesnt exist
 if [ ! -d "$DIRECTORY" ]; then
     # Make the local directory for the snapshot AND
     # Grab a copy of the directory recursively, staying within canada.ca domain, not following parent links
-	mkdir $DIRECTORY && wget --recursive --no-clobber --page-requisites --html-extension --convert-links --restrict-file-names=windows --domains canada.ca --no-parent -P $DIRECTORY $FRPURL 
+	mkdir -p $DIRECTORY && wget --recursive --no-clobber --page-requisites --html-extension --convert-links --restrict-file-names=windows --domains canada.ca --no-parent -P $DIRECTORY $FRPURL 
 
     # Move the files from the deep file file structure up to the main directory
 	mv "${DIRECTORY}${BASEURL}"/* "${DIRECTORY}/"
