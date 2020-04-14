@@ -5,19 +5,15 @@
 # Gordon D. Bonnar -- 2020-04-07
 
 # Set internal variables to arguments passed to script
-#OUTPUTDIR=$1
-#FRPURL=$2
-#DEPT=$3
-
 # Load parameters from source file
 # Config file should define:
 # OUTPUTDIR - Where to save fownloaded files
 # FRPURL - The URL to the FRP page on the internet
 # DEPT - The offical short form of the department or agency name
 # BASEURL - The URL from the end of the protocol to just before the filenam
-# TODO: Calculate BASEURL dynamicallye
-#source CBSA.conf
-source CRA.conf
+# TODO: Calculate BASEURL dynamicaly
+
+source FIN.conf
 
 # Prepare other variables from parameters
 DOMAIN=$(echo $FRPURL|awk -F[/:] '{print $4}')
