@@ -20,9 +20,18 @@ You can change `$(date "+%Y-%m-%d")` to reflect the sub-directory to store the a
 
 ## Usage
 To capture a snapshot of the current Forward Regulatory Plans, run:
-`./cacheFRP`
-Only working with CRA at this time.
+`./cacheFRP` dept.conf
+Where dept.conf is the configuration file for the requested department or agency.
 
+## Config files
+Config files are currently just shell script format files which assign department specific variables.  Here is an example for the Canada Revenue Agency
+
+CRA.conf
+```Bash
+FRPURL="https://www.canada.ca/en/revenue-agency/programs/about-canada-revenue-agency-cra/acts-regulations/forward-regulatory-plan/current-initiatives/regulatory-initiatives.html"
+DEPT="CRA"
+BASEURL="/www.canada.ca/en/revenue-agency/programs/about-canada-revenue-agency-cra/acts-regulations/forward-regulatory-plan/current-initiatives/"
+```
 ## Contributing
 This is a quick script I put together to help me capture changes in the CRA Forward Regulatory Plans.  The whole of the Government of Canada is required to publish these plans at least annually.  I would be interested in abstracting the process and applying it to the government-wide plans, with the hopes of making a historical record of all Foreward Regulatory Plans.
 
