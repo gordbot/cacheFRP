@@ -38,10 +38,15 @@ if [ ! -d "$DIRECTORY" ]; then
     # Grab a copy of the directory recursively, staying within canada.ca domain, not following parent links
 	mkdir -p $DIRECTORY && wget --recursive --no-clobber --page-requisites --html-extension --convert-links --restrict-file-names=windows --domains canada.ca --no-parent -P $DIRECTORY $FRPURL 
 
-    # Move the files from the deep file file structure up to the main directory
+    # When wget grabs all of the files, they are stored in the full directory structure.
+    # To keep things small and easy to work with, we use FRPURL to create a $BASEURL which
+    # can be used to move all the files higher in the directory.  
+    BASEURL=$(echo ${FRPURL} | sed "s|https:/\(.*\)/.*|\1/|") 
+
+    # Move the files from the deep file structure up to the main local directory
 	mv "${DIRECTORY}${BASEURL}"/* "${DIRECTORY}/"
 
-    # Remove the www.canada.ca directory
+    # Remove the base domain, often but not always www.canada.ca directory
 	rm -r "${DIRECTORY}/${DOMAIN}"
 
     # To facilitate browsing archives, rename the main page to index.html
@@ -52,5 +57,6 @@ if [ ! -d "$DIRECTORY" ]; then
 
     # Replace the stylesheet path with the local stylesheet store
     # TODO: Abstract or parametrize how we handle the stylesheet
-    sed -i "s|../../../../../../../etc/designs/canada/wet-boew/css/theme.min.css|../styles/theme.min.css|" "${DIRECTORY}/index.html"
+    #sed -i "s|../../../../../../../etc/designs/canada/wet-boew/css/theme.min.css|../../styles/theme.min.css|" "${DIRECTORY}/index.html"
+    sed -i "s|href=\".*/etc/designs/canada/wet-boew/css/theme.min.css|href=\"../../styles/theme.min.css|" "${DIRECTORY}/index.html"
 fi
