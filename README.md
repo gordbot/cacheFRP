@@ -24,7 +24,8 @@ To capture a snapshot of the current Forward Regulatory Plans, run:
 Where dept.conf is the configuration file for the requested department or agency.
 
 ## Config files
-Config files are currently just shell script format files which assign department specific variables.  Here is the CRA.conf
+Config files are currently just shell script format files which assign department specific variables.  Here is an example for the Canada Revenue Agency
+
 CRA.conf
 ```Bash
 FRPURL="https://www.canada.ca/en/revenue-agency/programs/about-canada-revenue-agency-cra/acts-regulations/forward-regulatory-plan/current-initiatives/regulatory-initiatives.html"
