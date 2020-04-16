@@ -57,6 +57,5 @@ if [ ! -d "$DIRECTORY" ]; then
 
     # Replace the stylesheet path with the local stylesheet store
     # TODO: Abstract or parametrize how we handle the stylesheet
-    #sed -i "s|../../../../../../../etc/designs/canada/wet-boew/css/theme.min.css|../../styles/theme.min.css|" "${DIRECTORY}/index.html"
     sed -i "s|href=\".*/etc/designs/canada/wet-boew/css/theme.min.css|href=\"../../styles/theme.min.css|" "${DIRECTORY}/index.html"
 fi
