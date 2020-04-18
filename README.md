@@ -17,8 +17,11 @@ To capture a snapshot of all current departmental Forward Regulatory Plans, run:
 `cachefrp.sh frpurls.csv`
 
 Where frpurls.csv is a CSV of the form:
-`Dept, url_to_FRP_index'
+
+`Dept, url_to_FRP_index`
+
 So, the line for the CRA would read:
+
 ` CRA,https://www.canada.ca/en/revenue-agency/programs/about-canada-revenue-agency-cra/acts-regulations/forward-regulatory-plan/current-initiatives/regulatory-initiatives.html`
 
 #### Change dynamic directory for storing snapshots
