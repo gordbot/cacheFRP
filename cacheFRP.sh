@@ -36,11 +36,12 @@ do
         # Make the local directory for the snapshot and grab a 
         # copy of the directory recursively, staying 
         # within canada.ca domain, not following parent links
-        mkdir -p $DIRECTORY && wget --recursive --no-clobber --page-requisites --html-extension --convert-links --restrict-file-names=windows --domains canada.ca --no-parent -P $DIRECTORY $FRPURL 
+        mkdir -p $DIRECTORY && wget -q --recursive --no-clobber --page-requisites --html-extension --convert-links --restrict-file-names=windows --domains canada.ca --no-parent -P $DIRECTORY $FRPURL 
 
         # wget grabs files and original source directory structure.
         # We define BASEURL as the FRPURL minus the filename
-        BASEURL=$(echo ${FRPURL} | sed "s|https:/\(.*\)/.*|\1/|") 
+        #BASEURL=$(echo ${FRPURL} | sed "s|https:/\(.*\)/.*|\1/|") 
+        BASEURL=$(echo ${FRPURL} | sed -E "s|https?:/(.*)/.*|\1/|")
 
         # We can now use BASEURL to allow use to move all of
         # of the downloaded files up to the new DIRECTORY
@@ -48,11 +49,10 @@ do
 
         # Remove the base domain directory created by wget
         rm -r "${DIRECTORY}/${DOMAIN}"
-
         # To facilitate browsing archives, rename the main page to index.html
         mv "${DIRECTORY}/${FILENAME}" "${DIRECTORY}/index.html"
 
-        # Correct anchor references to point to  page
+        # Correct anchor references in FILENAME to point to index page
         sed -i "s/${FILENAME}//" "${DIRECTORY}/index.html"
 
         # Replace the stylesheet path with the local stylesheet store
