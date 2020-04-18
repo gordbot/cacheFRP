@@ -10,8 +10,18 @@
 #   FRPURL - The URL to the FRP page on the internet
 
 # Set OUTPUTDIR to the base directory where you want the cached 
-# FRP files to be saved
+# FRP files to be saved. Replaced if -outputdir flag is used
 OUTPUTDIR="/var/www/frp.policygeek.ca/public_html"
+
+while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
+  -o | --outputdir )
+    shift; OUTPUTDIR=$1
+    ;;
+  -f | --file )
+    shift; FILE=$1
+    ;;
+esac; shift; done
+if [[ "$1" == '--' ]]; then shift; fi
 
 # For each line of the file, set the DEPT and FRPURL parameters
 while IFS=, read -r dept url
@@ -58,4 +68,4 @@ do
         # Replace the stylesheet path with the local stylesheet store
         sed -i "s|href=\".*/etc/designs/canada/wet-boew/css/theme.min.css|href=\"../../styles/theme.min.css|" "${DIRECTORY}/index.html"
     fi
-done < frpurls.csv
+done < $FILE
