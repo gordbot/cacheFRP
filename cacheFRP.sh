@@ -31,14 +31,16 @@ do
     DEPT=$dept
     FRPURL=$url
 
-    echo "Department: ${DEPT}"
-
     # Given a URL, get the domain
     DOMAIN=$(echo $FRPURL|awk -F[/:] '{print $4}')
-    echo "Domain: ${DOMAIN}" 
     
-    # DEPRECATED: FILENAME defined below. Grab the final filename by deleting everything up to the final / in FRPURL
-    #FILENAME="${FRPURL##*/}"
+    # Grabs the file name from the end of the URL and adds html if not there
+    # to replicate wget behaviour
+    FILENAME="${FRPURL##*/}"
+    PATTERN="\.[Hh][Tt][Mm][Ll]?$"
+    if [[ ! $FILENAME =~ $PATTERN ]]; then
+	FILENAME=${FILENAME}'.html'
+    fi
 
     # Append the date to the directory using the format 
     # YYYY-MM-DD
@@ -49,29 +51,19 @@ do
         # Make the local directory for the snapshot and grab a 
         # copy of the directory recursively, staying 
         # within canada.ca domain, not following parent links
-        #mkdir -p $DIRECTORY && wget -q --recursive --no-clobber --page-requisites --html-extension --convert-links --restrict-file-names=windows --domains canada.ca --no-parent -P $DIRECTORY $FRPURL 
-        mkdir -p $DIRECTORY && wget -q --no-check-certificate --recursive --page-requisites --html-extension --convert-links --no-parent -P $DIRECTORY $FRPURL 
-	echo "Directory listing #1"
-	(ls ${DIRECTORY})
+        mkdir -p $DIRECTORY && wget -q --domains $DOMAIN --no-check-certificate --recursive -l 1 --page-requisites --html-extension --convert-links --no-parent -P $DIRECTORY $FRPURL 
+
         # wget grabs files and original source directory structure.
         # We define BASEURL as the FRPURL minus the filename
         BASEURL=$(echo ${FRPURL} | sed -E "s|https?:/(.*)/.*|\1/|")
-        echo "Base URL: ${BASEURL}"
-	#ls ${DIRECTORY}/${BASEURL}
+
         # We can now use BASEURL to allow use to move all of
         # of the downloaded files up to the new DIRECTORY
-	echo "mv ${DIRECTORY}${BASEURL}* ${DIRECTORY}/"
-	mv ${DIRECTORY}${BASEURL}* ${DIRECTORY}/
-        
-        echo "Directory listing"
-        ls ${DIRECTORY}
-
+        mv ${DIRECTORY}${BASEURL}* ${DIRECTORY}/
         rm -r "${DIRECTORY}/${DOMAIN}"
-        FILENAME=$(ls -p ${DIRECTORY}/ | grep -v / | head -n 1)
-	echo $DIRECTORY
-	echo $FILENAME
+
         # To facilitate browsing archives, rename the main page to index.html
-        echo "mv ${DIRECTORY}/${FILENAME} ${DIRECTORY}/index.html"
+        
         mv "${DIRECTORY}/${FILENAME}" "${DIRECTORY}/index.html"
 
         # Correct anchor references in FILENAME to point to index page
