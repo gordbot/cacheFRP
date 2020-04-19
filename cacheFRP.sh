@@ -5,12 +5,13 @@
 
 # Set internal variables to arguments passed to script
 # Load parameters from source file
-# Config file should be a CSV of the format: FRPURL, ,FRPURL where::
+# FILE should be a CSV of the format: FRPURL, ,FRPURL where::
 #   DEPT - The offical short form of the department or agency name
 #   FRPURL - The URL to the FRP page on the internet
 
-# Set OUTPUTDIR to the base directory where you want the cached 
+# OUTPUTDIR is the base directory where you want the cached 
 # FRP files to be saved. Replaced if -outputdir flag is used
+# Set default inputs and outputs
 OUTPUTDIR="/var/www/frp.policygeek.ca/public_html"
 
 while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
@@ -30,42 +31,54 @@ do
     DEPT=$dept
     FRPURL=$url
 
+    echo "Department: ${DEPT}"
+
     # Given a URL, get the domain
     DOMAIN=$(echo $FRPURL|awk -F[/:] '{print $4}')
+    echo "Domain: ${DOMAIN}" 
     
-    #Grab the final filename by deleting everything up to the final / in FRPURL
-    FILENAME="${FRPURL##*/}"
+    # DEPRECATED: FILENAME defined below. Grab the final filename by deleting everything up to the final / in FRPURL
+    #FILENAME="${FRPURL##*/}"
 
     # Append the date to the directory using the format 
     # YYYY-MM-DD
     DIRECTORY="${OUTPUTDIR}/${DEPT}/$(date "+%Y-%m-%d")"
-
 
     # If the directory doesnt exist
     if [ ! -d "$DIRECTORY" ]; then
         # Make the local directory for the snapshot and grab a 
         # copy of the directory recursively, staying 
         # within canada.ca domain, not following parent links
-        mkdir -p $DIRECTORY && wget -q --recursive --no-clobber --page-requisites --html-extension --convert-links --restrict-file-names=windows --domains canada.ca --no-parent -P $DIRECTORY $FRPURL 
-
+        #mkdir -p $DIRECTORY && wget -q --recursive --no-clobber --page-requisites --html-extension --convert-links --restrict-file-names=windows --domains canada.ca --no-parent -P $DIRECTORY $FRPURL 
+        mkdir -p $DIRECTORY && wget -q --no-check-certificate --recursive --page-requisites --html-extension --convert-links --no-parent -P $DIRECTORY $FRPURL 
+	echo "Directory listing #1"
+	(ls ${DIRECTORY})
         # wget grabs files and original source directory structure.
         # We define BASEURL as the FRPURL minus the filename
-        #BASEURL=$(echo ${FRPURL} | sed "s|https:/\(.*\)/.*|\1/|") 
         BASEURL=$(echo ${FRPURL} | sed -E "s|https?:/(.*)/.*|\1/|")
-
+        echo "Base URL: ${BASEURL}"
+	#ls ${DIRECTORY}/${BASEURL}
         # We can now use BASEURL to allow use to move all of
         # of the downloaded files up to the new DIRECTORY
-        mv "${DIRECTORY}${BASEURL}"/* "${DIRECTORY}/"
+	echo "mv ${DIRECTORY}${BASEURL}* ${DIRECTORY}/"
+	mv ${DIRECTORY}${BASEURL}* ${DIRECTORY}/
+        
+        echo "Directory listing"
+        ls ${DIRECTORY}
 
-        # Remove the base domain directory created by wget
         rm -r "${DIRECTORY}/${DOMAIN}"
+        FILENAME=$(ls -p ${DIRECTORY}/ | grep -v / | head -n 1)
+	echo $DIRECTORY
+	echo $FILENAME
         # To facilitate browsing archives, rename the main page to index.html
+        echo "mv ${DIRECTORY}/${FILENAME} ${DIRECTORY}/index.html"
         mv "${DIRECTORY}/${FILENAME}" "${DIRECTORY}/index.html"
 
         # Correct anchor references in FILENAME to point to index page
         sed -i "s/${FILENAME}//" "${DIRECTORY}/index.html"
 
         # Replace the stylesheet path with the local stylesheet store
-        sed -i "s|href=\".*/etc/designs/canada/wet-boew/css/theme.min.css|href=\"../../styles/theme.min.css|" "${DIRECTORY}/index.html"
+        sed -i "s|href=\".*/theme.min.css|href=\"../../styles/theme.min.css|" "${DIRECTORY}/index.html"
+        
     fi
 done < $FILE
