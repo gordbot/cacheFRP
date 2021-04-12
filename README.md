@@ -28,7 +28,7 @@ So, the line for the CRA would read:
 You can change `$(date "+%Y-%m-%d")` to reflect the sub-directory to store the actual FRP snapshots.  The default will create a directory of the format YYYY-MM-DD in your base directory
 
 ## Contributing
-This is a quick script I put together to help me capture changes in the CRA Forward Regulatory Plans.  The whole of the Government of Canada is required to publish these plans at least annually.  I would be interested in abstracting the process and applying it to the government-wide plans, with the hopes of making a historical record of all Foreward Regulatory Plans.
+This is a quick script I put together to help me capture changes in the Government's Forward Regulatory Plans.  All departments and agencies of the Government of Canada are required to publish these plans at least annually.  I wrote this script in the hopes of making a historical record of all Forward Regulatory Plans as the policies require that it be updated, but do not require that it be archived. 
 
 If you have any interest in government, government reporting, screen scraping, database, or front-end development, I'd love to hear from you.  You can reach me here or at gordonbonnar@gmail.com.
 
