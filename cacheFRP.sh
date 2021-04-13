@@ -5,7 +5,7 @@
 
 # Set internal variables to arguments passed to script
 # Load parameters from source file
-# FILE should be a CSV of the format: FRPURL, ,FRPURL where::
+# FILE should be a CSV of the format: DEPT, FRPURL where::
 #   DEPT - The offical short form of the department or agency name
 #   FRPURL - The URL to the FRP page on the internet
 
