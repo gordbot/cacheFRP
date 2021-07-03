@@ -5,7 +5,7 @@
 
 # Set internal variables to arguments passed to script
 # Load parameters from source file
-# FILE should be a CSV of the format: FRPURL, ,FRPURL where::
+# FILE should be a CSV of the format: DEPT, FRPURL where::
 #   DEPT - The offical short form of the department or agency name
 #   FRPURL - The URL to the FRP page on the internet
 
@@ -14,15 +14,12 @@
 # Set default inputs and outputs
 OUTPUTDIR="/var/www/frp.policygeek.ca/public_html"
 
-while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
-  -o | --outputdir )
-    shift; OUTPUTDIR=$1
-    ;;
-  -f | --file )
-    shift; FILE=$1
-    ;;
-esac; shift; done
-if [[ "$1" == '--' ]]; then shift; fi
+#Setting input urls file
+if [[ $1 ]]; then
+    FILE=$1
+else
+    FILE=frpurls.csv
+fi
 
 # For each line of the file, set the DEPT and FRPURL parameters
 while IFS=, read -r dept url
@@ -34,7 +31,8 @@ do
     # Given a URL, get the domain
     DOMAIN=$(echo $FRPURL|awk -F[/:] '{print $4}')
     
-    # Grabs the file name from the end of the URL and adds html if not there
+    # Grabs the file name from the end of the URL, strips off any 
+    #trailing #, &, or whitespace, and adds html to the end if not there
     # to replicate wget behaviour
     FILENAME="${FRPURL##*/}"
     PATTERN="\.[Hh][Tt][Mm][Ll]?$"
@@ -59,6 +57,7 @@ do
 
         # We can now use BASEURL to allow use to move all of
         # of the downloaded files up to the new DIRECTORY
+
         mv ${DIRECTORY}${BASEURL}* ${DIRECTORY}/
         rm -r "${DIRECTORY}/${DOMAIN}"
 
